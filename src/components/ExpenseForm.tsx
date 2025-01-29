@@ -54,6 +54,14 @@ export const ExpenseForm = () => {
     } else {
       //add expense
       dispatch({ type: "add-expense", payload: { expense } });
+
+      // reset state
+      setExpense({
+        amount: 0,
+        category: "",
+        name: "",
+        date: new Date(),
+      });
     }
   };
   return (
