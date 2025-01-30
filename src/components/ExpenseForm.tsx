@@ -1,5 +1,5 @@
 import { categories } from "../data/categories";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DraftExpense } from "../types";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
@@ -43,7 +43,16 @@ export const ExpenseForm = () => {
   });
 
   const [error, setError] = useState<string | null>("");
-  const { dispatch } = useBudget();
+  const { state, dispatch } = useBudget();
+
+  useEffect(() => {
+    if (state.editingId) {
+      const expense = state.expenses.filter(
+        (expense) => expense.id === state.editingId
+      )[0];
+      setExpense(expense);
+    }
+  }, [state.editingId, state.expenses]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,9 +61,6 @@ export const ExpenseForm = () => {
       setError("Todos los campos son obligatorios");
       return;
     } else {
-      //add expense
-      dispatch({ type: "add-expense", payload: { expense } });
-
       // reset state
       setExpense({
         amount: 0,
@@ -62,6 +68,16 @@ export const ExpenseForm = () => {
         name: "",
         date: new Date(),
       });
+
+      // Update or Add expense
+      if (state.editingId) {
+        dispatch({
+          type: "update-expense",
+          payload: { expense: { id: state.editingId, ...expense } },
+        });
+      } else {
+        dispatch({ type: "add-expense", payload: { expense } });
+      }
     }
   };
   return (
