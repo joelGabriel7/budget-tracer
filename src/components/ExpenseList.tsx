@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useBudget } from "../hooks/userBudget";
+import { useBudget } from "../hooks/useBudget";
 import ExpenseDetails from "./ExpenseDetails";
 
 const ExpenseList = () => {

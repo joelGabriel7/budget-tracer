@@ -5,7 +5,7 @@ import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import ErrorMessage from "./ErrorMessage";
-import { useBudget } from "../hooks/userBudget";
+import { useBudget } from "../hooks/useBudget";
 
 /*
 This ExpenseForm component manages an expense form using React state.
@@ -35,6 +35,7 @@ just the changed field.
 */
 
 export const ExpenseForm = () => {
+  const [previousAmount, setPreviousAmount] = useState<number>(0);
   const [expense, setExpense] = useState<DraftExpense>({
     amount: 0,
     category: "",
@@ -43,7 +44,7 @@ export const ExpenseForm = () => {
   });
 
   const [error, setError] = useState<string | null>("");
-  const { state, dispatch } = useBudget();
+  const { state, dispatch,remainingBudget } = useBudget();
 
   useEffect(() => {
     if (state.editingId) {
@@ -51,6 +52,7 @@ export const ExpenseForm = () => {
         (expense) => expense.id === state.editingId
       )[0];
       setExpense(expense);
+      setPreviousAmount(expense.amount);
     }
   }, [state.editingId, state.expenses]);
 
@@ -60,14 +62,12 @@ export const ExpenseForm = () => {
     if (Object.values(expense).includes("")) {
       setError("Todos los campos son obligatorios");
       return;
-    } else {
-      // reset state
-      setExpense({
-        amount: 0,
-        category: "",
-        name: "",
-        date: new Date(),
-      });
+    }  
+    //validate not exceed limit
+    if ((expense.amount - previousAmount )> remainingBudget) { 
+      setError("El gasto no puede exceder el presupuesto");
+      return;
+    }
 
       // Update or Add expense
       if (state.editingId) {
@@ -79,7 +79,15 @@ export const ExpenseForm = () => {
         dispatch({ type: "add-expense", payload: { expense } });
         
       }
-    }
+      // reset state
+      setExpense({
+        amount: 0,
+        category: "",
+        name: "",
+        date: new Date(),
+      });
+      setPreviousAmount(0);
+    
   };
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>

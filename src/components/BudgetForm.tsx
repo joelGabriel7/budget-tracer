@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useBudget } from "../hooks/userBudget";
+import { useBudget } from "../hooks/useBudget";
 
 const BudgetForm = () => {
     const [budget, setBudget] = useState(0);

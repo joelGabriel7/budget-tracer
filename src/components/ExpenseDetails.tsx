@@ -6,7 +6,7 @@ import {
   TrailingActions,
 } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
-import { useBudget } from "../hooks/userBudget";
+import { useBudget } from "../hooks/useBudget";
 import { useMemo } from "react";
 import { formatDate } from "../helpers/utils";
 import { Expense } from "../types/index";
@@ -48,7 +48,7 @@ const ExpenseDetails = ({ expense }: { expense: Expense }) => {
             leadingActions={leadingActions()}
             trailingActions={trailingActions()}
             >
-                <div className="bg-white p-5 rounded-lg shadow-lg w-full p-10 border-b border-gray-200 flex gap-5 items-center ">
+                <div className="bg-white  rounded-lg shadow-lg w-full p-10 border-b border-gray-200 flex gap-5 items-center ">
                     <div>
                     <img
                         src={`/icono_${categoryInfo.icon}.svg`}
