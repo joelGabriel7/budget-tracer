@@ -77,13 +77,14 @@ export const ExpenseForm = () => {
         });
       } else {
         dispatch({ type: "add-expense", payload: { expense } });
+        
       }
     }
   };
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
       <legend className="uppercase text-center font-black  border-b-4 text-2xl text-gray-500 border-blue-500 py-2">
-        Add Expense
+       {state.editingId ? " Edit Expense" :" Add Expense"}
       </legend>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -158,7 +159,7 @@ export const ExpenseForm = () => {
       <input
         type="submit"
         className="bg-blue-500 text-white p-2 w-full font-bold uppercase rounded-md cursor-pointer"
-        value="Add Expense"
+        value={state.editingId ? "Edit Expense" : "Add Expense"}
       />
     </form>
   );
